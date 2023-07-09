@@ -35,7 +35,7 @@ class GameControllerIntegrationTest {
 	@BeforeEach
     public void initGame() throws Exception {
         // Send a POST request to create a game
-        MvcResult result = mockMvc.perform(post("/kalaha")
+        MvcResult result = mockMvc.perform(post("/v1/kalaha")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -66,9 +66,9 @@ class GameControllerIntegrationTest {
 		
 		String gameInput = "{\"gameId\": " + gameId + ", \"pitNum\": 5}";
 
-		mockMvc.perform(post("/kalaha").contentType(MediaType.APPLICATION_JSON));
+		mockMvc.perform(post("/v1/kalaha").contentType(MediaType.APPLICATION_JSON));
 		
-		mockMvc.perform(patch("/kalaha/play").contentType(MediaType.APPLICATION_JSON).content(gameInput))
+		mockMvc.perform(patch("/v1/kalaha/play").contentType(MediaType.APPLICATION_JSON).content(gameInput))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.currPlayerIndex").value(1))
 				.andExpect(jsonPath("$.pits[4].noOfStones").value(0))
