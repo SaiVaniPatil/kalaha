@@ -164,7 +164,7 @@ public class DefaultGameServiceImpl implements GameService {
 
 		for (Player player : players) {
 
-			int sumOfStones = pits.subList(player.getStartPitNum(), player.getEndPitNum()).stream()
+			int sumOfStones = pits.subList(player.getStartPitNum()-1, player.getEndPitNum()).stream()
 					.mapToInt(Pit::getNoOfStones).sum();			
 
 			if (sumOfStones > maxStonesSum) {

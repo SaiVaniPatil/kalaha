@@ -217,4 +217,73 @@ class DefaultGameServiceImplTest {
 
 	}
 
+	@Test
+	public void playMove_ValidMove_Player1winsthegame_Success() throws Exception {
+
+		GameInput gameInput = new GameInput(1L, 1);
+
+		for(Pit pit:game.getPits())
+		{
+			pit.setNoOfStones(0);
+		}
+
+		game.getPits().get(8).setNoOfStones(2);
+		game.getPits().get(6).setNoOfStones(33);
+		game.getPits().get(13).setNoOfStones(36);
+		game.getPits().get(0).setNoOfStones(1);
+
+		when(gameRepository.findById(gameInput.getGameId())).thenReturn(Optional.of(game));
+
+		Game result = gameService.playMove(gameInput);
+
+		verify(gameRepository).findById(gameInput.getGameId());
+
+		assertEquals(result.getPlayers().get(0).isHasWon(), false);
+		assertEquals(result.getPlayers().get(1).isHasWon(), true);
+		assertEquals(result.getPits().get(6).getNoOfStones(),34);
+		assertEquals(result.getPits().get(8).getNoOfStones(),2);
+		assertEquals(result.getPits().get(13).getNoOfStones(),36);
+		assertEquals(result.getPlayers().get(0).getSumOfStones(),34);
+		assertEquals(result.getPlayers().get(1).getSumOfStones(),38);
+
+		assertEquals(result.isGameEnded(), true);
+
+
+	}
+
+	@Test
+	public void playMove_ValidMove_drawbetweenPlayers_Success() throws Exception {
+
+		GameInput gameInput = new GameInput(1L, 1);
+
+		for(Pit pit:game.getPits())
+		{
+			pit.setNoOfStones(0);
+		}
+
+		game.getPits().get(8).setNoOfStones(1);
+		game.getPits().get(6).setNoOfStones(35);
+		game.getPits().get(13).setNoOfStones(35);
+		game.getPits().get(0).setNoOfStones(1);
+
+		when(gameRepository.findById(gameInput.getGameId())).thenReturn(Optional.of(game));
+
+		Game result = gameService.playMove(gameInput);
+
+		verify(gameRepository).findById(gameInput.getGameId());
+
+		assertEquals(result.getPlayers().get(0).isHasWon(), true);
+		assertEquals(result.getPlayers().get(1).isHasWon(), true);
+		assertEquals(result.getPits().get(6).getNoOfStones(),36);
+		assertEquals(result.getPits().get(8).getNoOfStones(),1);
+		assertEquals(result.getPits().get(0).getNoOfStones(),0);
+		assertEquals(result.getPits().get(13).getNoOfStones(),35);
+		assertEquals(result.getPlayers().get(0).getSumOfStones(),36);
+		assertEquals(result.getPlayers().get(1).getSumOfStones(),36);
+
+		assertEquals(result.isGameEnded(), true);
+
+
+	}
+
 }
